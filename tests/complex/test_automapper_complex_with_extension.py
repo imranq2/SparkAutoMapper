@@ -3,11 +3,10 @@ from typing import Dict, Optional
 from pyspark.sql import SparkSession, Column, DataFrame
 # noinspection PyUnresolvedReferences
 from pyspark.sql.functions import col
-from pyspark.sql.types import ArrayType, IntegerType, StringType, StructField, StructType, TimestampType
+from pyspark.sql.types import IntegerType, StringType, StructField, StructType
 
 from spark_auto_mapper.automappers.automapper import AutoMapper
 from spark_auto_mapper.data_types.complex.complex_base import AutoMapperDataTypeComplexBase
-from spark_auto_mapper.data_types.data_type_base import AutoMapperDataTypeBase
 from spark_auto_mapper.data_types.list import AutoMapperList
 from spark_auto_mapper.data_types.number import AutoMapperNumberDataType
 from spark_auto_mapper.data_types.text_like_base import AutoMapperTextLikeBase
@@ -66,33 +65,6 @@ class MyProcessingStatusExtension(AutoMapperDataTypeComplexBase):
                 include_null_properties=include_null_properties
             )
 
-    def get_schema(self, include_extension: bool) -> Optional[StructType]:
-        return StructType(
-            [
-                StructField("url", StringType()),
-                StructField(
-                    "extension",
-                    ArrayType(
-                        StructType(
-                            [
-                                StructField("url", StringType()),
-                                StructField("valueString", StringType()),
-                                StructField("valueDateTime", TimestampType())
-                            ]
-                        )
-                    )
-                )
-            ]
-        )
-
-    def get_value(
-        self,
-        value: AutoMapperDataTypeBase,
-        source_df: Optional[DataFrame],
-        current_column: Optional[Column],
-    ) -> Column:
-        return super().get_value(value, source_df, current_column)
-
 
 class MyClass(AutoMapperDataTypeComplexBase):
     def __init__(
@@ -142,7 +114,7 @@ def test_auto_mapper_complex_with_extension(
                     MyProcessingStatusExtension(
                         processing_status=A.text("foo"),
                         request_id=A.text("bar"),
-                        date_processed=A.date("2021-01-01")
+                        date_processed=A.datetime("2019-07-01 12:01:19.000")
                     )
                 ]
             )
