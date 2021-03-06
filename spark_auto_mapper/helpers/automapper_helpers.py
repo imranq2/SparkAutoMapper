@@ -64,7 +64,7 @@ class AutoMapperHelpers:
         return AutoMapperDataTypeComplex(**kwargs)
 
     @staticmethod
-    def column(value: str) -> AutoMapperArrayLikeBase:
+    def column(value: str) -> AutoMapperTextLikeBase:
         """
         Specifies that the value parameter should be used as a column name
         :param value: name of column

@@ -50,9 +50,13 @@ class AutoMapperDateTimeDataType(AutoMapperDataTypeBase):
         ]
         if source_df is not None and isinstance(self.value, AutoMapperDataTypeColumn) \
                 and not dict(source_df.dtypes)[self.value.value] == "timestamp":
-            return coalesce(*formats_column_specs)
+            return coalesce(
+                *formats_column_specs
+            ) if len(formats_column_specs) > 1 else formats_column_specs[0]
         elif isinstance(self.value, AutoMapperDataTypeLiteral):
-            return coalesce(*formats_column_specs)
+            return coalesce(
+                *formats_column_specs
+            ) if len(formats_column_specs) > 1 else formats_column_specs[0]
         else:
             column_spec = self.value.get_column_spec(
                 source_df=source_df, current_column=current_column
